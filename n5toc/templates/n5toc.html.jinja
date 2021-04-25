@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>N5 Table of Contents: {{root_dir}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TODO: Use a local copy of bootstrap css instead of downloading from a CDN -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<div class="container">
+  <h1>N5 Table of Contents: {{root_dir}}</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        {% for column_name in column_names %}
+          <th>{{column_name}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for entry in entries %}
+        <tr>
+          <td class="text-nowrap">{{ entry.sample }}</td>
+          <td class="text-nowrap">{{ entry.stage }}</td>
+          <td class="text-nowrap">{{ entry.section }}</td>
+          <td class="text-nowrap">{{ entry.full_version }}</td>
+          <td class="text-nowrap">{{ entry.offset }}</td>
+          <td class="text-nowrap"><a href="{{entry.link}}" title={{entry.full_version}}>{{ entry.name }}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
