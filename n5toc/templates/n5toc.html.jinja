@@ -31,7 +31,14 @@
           <td class="text-nowrap">{{ entry.section }}</td>
           <td class="text-nowrap">{{ entry.full_version }}</td>
           <td class="text-nowrap">{{ entry.offset }}</td>
-          <td class="text-nowrap"><a href="{{entry.link}}" title={{entry.full_version}}>{{ entry.name }}</a></td>
+
+          {% if entry.offset_link %}
+            <td class="text-nowrap"><a href="{{entry.offset_link}}" title={{entry.full_version}}>{{ entry.name }}-bdv-offset</a></td>
+          {% else %}
+            <td class="text-nowrap"></td>
+          {% endif %}
+
+          <td class="text-nowrap"><a href="{{entry.link}}" title={{entry.full_version}}>{{ entry.name }}-NO-OFFSET</a></td>
       </tr>
       {% endfor %}
     </tbody>

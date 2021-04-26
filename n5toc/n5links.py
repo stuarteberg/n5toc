@@ -7,7 +7,7 @@ from collections import namedtuple
 
 import numpy as np
 
-TocEntry = namedtuple('TocEntry', 'sample stage section version full_version name offset link')
+TocEntry = namedtuple('TocEntry', 'sample stage section version full_version name offset offset_link link')
 
 N5_FILE_SERVER = "http://emdata4.int.janelia.org:9999"
 
@@ -71,12 +71,11 @@ def construct_nglink(path, attrs, nghost=NG_HOST, n5server=N5_FILE_SERVER):
     sample, stage, section, full_version = path.parts[-5:-1]
     version = full_version.split('_')[0]
 
+    name = f"{stage}-{section}-{version}"
     if 'translate' in attrs:
-        name = f"{stage}-{section}-{version}-bdv-offset"
         offset = attrs['translate']
         offset_str = ', '.join(map(str, offset))
     else:
-        name = f"{stage}-{section}-{version}-NO-OFFSET"
         offset = [0,0,0]
         offset_str = 'OFFSET-MISSING'
 
@@ -87,9 +86,18 @@ def construct_nglink(path, attrs, nghost=NG_HOST, n5server=N5_FILE_SERVER):
     transform[:, -1] = offset
 
     ng = copy.deepcopy(DEFAULT_NG_SETTINGS)
-    ng["layers"][0]["name"] = name
+    ng["layers"][0]["name"] = f"{name}-bdv-offset"
     ng["layers"][0]["source"]["url"] = f"n5://{n5server}/{path.parent}"
     ng["layers"][0]["source"]["transform"]["matrix"] = transform.tolist()
 
+    # If possible, return two links (with offset and without)
+    if offset_str != 'OFFSET-MISSING':
+        offset_link = nghost + '/#!' + urllib.parse.quote(json.dumps(ng))
+    else:
+        offset_link = None
+
+    ng["layers"][0]["name"] = f"{name}-NO-OFFSET"
+    del ng["layers"][0]["source"]["transform"]
     link = nghost + '/#!' + urllib.parse.quote(json.dumps(ng))
-    return TocEntry(sample, stage, section, version, full_version, name, offset_str, link)
+
+    return TocEntry(sample, stage, section, version, full_version, name, offset_str, offset_link, link)
