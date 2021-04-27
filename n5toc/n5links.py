@@ -2,10 +2,11 @@ import copy
 import json
 import urllib.parse
 from pathlib import Path
-import subprocess
 from collections import namedtuple
 
 import numpy as np
+
+from .util import find_files
 
 TocEntry = namedtuple('TocEntry', 'sample stage section version full_version name offset offset_link link')
 
@@ -42,15 +43,12 @@ DEFAULT_NG_SETTINGS = {
   ]
 }
 
-def find_volumes(root_dir):
-    # Find json files, but don't look in s0, s1, etc.
-    # https://stackoverflow.com/a/4210072/162094
-    find_expr = f'find {root_dir} -type d \( -name "s[0-9]*" -o -path name \) -prune -false -o -name "*.json"'
-    print(find_expr)
-    proc = subprocess.run(find_expr, shell=True, capture_output=True)
-
+def find_volumes(root_dir, exclude_dirs):
+    # Find json files, but don't look in s0, s1, etc., or the explicitly excluded directories.
+    # We could probably do this with
+    attrs_files = find_files(root_dir, '.json', ["s[0-9]+", *exclude_dirs])
     vol_attrs = {}
-    for p in proc.stdout.decode('utf-8').split():
+    for p in attrs_files:
         p = p[len(root_dir)+1:]  # strip {root_dir}/ prefix
         with open(f'{root_dir}/{p}', 'r') as f:
             a = json.load(f)

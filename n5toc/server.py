@@ -9,6 +9,7 @@ from flask import Flask, request, render_template, abort, make_response, redirec
 from .n5links import find_volumes, links_for_volumes, construct_nglink, TocEntry
 
 ROOT_DIR = '/nrs/flyem/render/n5'
+EXCLUDE_DIRS = []
 
 app = Flask(__name__)
 
@@ -20,7 +21,7 @@ def index():
 
 @app.route('/toc')
 def toc():
-    vol_attrs = find_volumes(ROOT_DIR)
+    vol_attrs = find_volumes(ROOT_DIR, EXCLUDE_DIRS)
     links = links_for_volumes(vol_attrs)
     column_names = 'sample stage section version offset offset_link link'.split()
     return render_template('n5toc.html.jinja',
@@ -30,6 +31,7 @@ def toc():
 
 def main():
     global ROOT_DIR
+    global EXCLUDE_DIRS
     print(sys.argv)
 
     # Don't log ordinary GET, POST, etc.
@@ -38,10 +40,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', default=9998)
     parser.add_argument('--root-dir', default=ROOT_DIR)
+    parser.add_argument('--exclude-dirs', nargs='*')
     parser.add_argument('--debug-mode', action='store_true')
     args = parser.parse_args()
 
     ROOT_DIR = args.root_dir
+    EXCLUDE_DIRS = args.exclude_dirs
 
     # Terminate results in normal shutdown
     signal.signal(signal.SIGTERM, lambda signum, stack_frame: exit(1))
