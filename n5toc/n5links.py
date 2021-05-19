@@ -1,3 +1,4 @@
+import sys
 import copy
 import json
 import urllib.parse
@@ -50,8 +51,14 @@ def find_volumes(root_dir, exclude_dirs):
     vol_attrs = {}
     for p in attrs_files:
         p = p[len(root_dir)+1:]  # strip {root_dir}/ prefix
-        with open(f'{root_dir}/{p}', 'r') as f:
-            a = json.load(f)
+        fullpath = f'{root_dir}/{p}'
+        with open(fullpath, 'r') as f:
+            try:
+                a = json.load(f)
+            except Exception as ex:
+                print(f"Failed to parse {fullpath}:\n{ex}", file=sys.stderr)
+                continue
+
             if 'scales' in a:
                 vol_attrs[p] = a
     return vol_attrs
