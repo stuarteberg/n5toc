@@ -47,7 +47,7 @@ DEFAULT_NG_SETTINGS = {
 def find_volumes(root_dir, exclude_dirs):
     # Find json files, but don't look in s0, s1, etc., or the explicitly excluded directories.
     # We could probably do this with
-    attrs_files = find_files(root_dir, '.json', ["s[0-9]+", *exclude_dirs])
+    attrs_files = find_files(root_dir, '.json', ["s[0-9]+", "[0-9]+", *exclude_dirs])
     vol_attrs = {}
     for p in attrs_files:
         p = p[len(root_dir)+1:]  # strip {root_dir}/ prefix
