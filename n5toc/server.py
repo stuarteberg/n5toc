@@ -21,8 +21,11 @@ def index():
 
 @app.route('/toc')
 def toc():
+    print(f"Finding volumes in {ROOT_DIR} (excluding {EXCLUDE_DIRS})")
     vol_attrs = find_volumes(ROOT_DIR, EXCLUDE_DIRS)
+    print(f"Constructing links for {len(vol_attrs)} volumes")
     links = links_for_volumes(vol_attrs)
+    print("Rendering template")
     column_names = 'sample stage section version offset offset_link link'.split()
     return render_template('n5toc.html.jinja',
                            root_dir=ROOT_DIR,

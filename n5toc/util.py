@@ -92,7 +92,10 @@ def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
         subdirs = filter(lambda d: not skip_rgx.match(d), subdirs)
         subdirs = map(lambda d: f"{parent_dir}/{d}", subdirs)
 
+        # Recurse
         subdir_filesets = map(_find_files, subdirs)
+
+        # Concatenate
         return chain(files, *subdir_filesets)
 
     return list(_find_files(root_dir))
