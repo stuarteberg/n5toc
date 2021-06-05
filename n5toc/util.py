@@ -110,6 +110,6 @@ def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
         subdir_filesets = map(_find_files, subdirs)
 
         # Concatenate
-        return chain(files, *subdir_filesets)
+        return chain(sorted(files), *subdir_filesets)
 
     return list(_find_files(root_dir))
