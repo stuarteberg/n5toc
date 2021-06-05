@@ -36,7 +36,7 @@ def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
         ..code-block:: ipython
 
             In [1]: root_dir = '/nrs/flyem/render/n5/Z0720_07m_BR/render/Sec32'
-               ...: find_files( root_dir, '.json', ['s[0-9]+', 'v1'])
+               ...: find_files( root_dir, '.json', ['^s[0-9]+$', 'v1'])
             Out[1]:
             ['/nrs/flyem/render/n5/Z0720_07m_BR/render/Sec32/attributes.json',
              '/nrs/flyem/render/n5/Z0720_07m_BR/render/Sec32/v2_acquire_trimmed_sp1_adaptive___20210315_093643/attributes.json',
