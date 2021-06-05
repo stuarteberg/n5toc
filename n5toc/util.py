@@ -1,6 +1,9 @@
 import os
 import re
+import logging
 from itertools import chain
+
+logger = logging.getLogger(__name__)
 
 def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
     """
@@ -77,6 +80,8 @@ def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
     skip_rgx = re.compile(skip_expr)
 
     def _find_files(parent_dir):
+        logger.debug("Searching " + parent_dir)
+
         try:
             # Get only the parent directory contents (not subdir contents),
             # i.e. just one iteration of os.walk()
