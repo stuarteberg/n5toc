@@ -14,18 +14,25 @@ def find_files(root_dir, file_exts=None, skip_exprs=None, file_exprs=None):
     Args:
         root_dir:
             The root directory for the search
+
         file_exts:
             A file extension or list of extensions to search for.
             Cannot be used in conjunction with file_exprs.
+
         skip_exprs:
             A regular expression (or list of them) to specify which
             directories should be skipped entirely during the search.
+
+            Note:
+                The root_dir is always searched, even it if matches
+                something in skip_exprs.
+
         file_exprs:
             A regular expression (or list of them) to specify which file names to search for.
             Cannot be used in conjunction with file_exts.
 
     Returns:
-        list
+        list of matching file paths
 
     Note:
         Only files are searched for. Directories will not be returned,
