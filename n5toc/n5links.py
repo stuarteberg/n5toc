@@ -73,7 +73,13 @@ def links_for_volumes(vol_attrs):
 
 def construct_nglink(path, attrs, nghost=NG_HOST, n5server=N5_FILE_SERVER):
     path = Path(path)
-    sample, stage, section, full_version = path.parts[-5:-1]
+    parts = path.parts[-5:-1]
+
+    # Need 4 parts
+    blanks = (4-len(parts)) * ['']
+    parts = [*blanks, *parts]
+    
+    sample, stage, section, full_version = parts
     version = full_version.split('_')[0]
 
     name = f"{stage}-{section}-{version}"
